@@ -10,6 +10,7 @@ leaderRouter.use(bodyParser.json());
 
 leaderRouter.route('/')
 .get((req,res,next)=>{
+    console.log(req)
     Leaders.find({})
     .then((leaders)=>{
         res.statusCode=200;
@@ -39,9 +40,10 @@ leaderRouter.route('/')
     })
 });
 
-leaderRouter.route('/:promoId')
+leaderRouter.route('/:leaderId')
 .get((req,res,next)=>{
-    Leaders.findById(req.params.promoId)
+    console.log(req)
+    Leaders.findById(req.params.leaderId)
     .then((leader)=>{
         res.statusCode = 200;
         res.setHeader('Content-Type','application/json');
@@ -52,10 +54,10 @@ leaderRouter.route('/:promoId')
 .post(authenticate.verifyUser, authenticate.verifyAdmin,(req,res,next)=>{
     res.statusCode = 403;
     res.end('POST operation not supported on /leaders/'
-    +req.params.promoId);
+    +req.params.leaderId);
 })
 .put(authenticate.verifyUser, authenticate.verifyAdmin,(req,res,next)=>{
-    Leaders.findByIdAndUpdate(req.params.promoId,{
+    Leaders.findByIdAndUpdate(req.params.leaderId,{
         $set: req.body
     },{new:true})
     .then((leader)=>{
@@ -65,7 +67,7 @@ leaderRouter.route('/:promoId')
     },(err)=>next(err));
 })
 .delete(authenticate.verifyUser, authenticate.verifyAdmin,(req,res,next)=>{
-    Leaders.findByIdAndRemove(req.params.promoId)
+    Leaders.findByIdAndRemove(req.params.leaderId)
     .then((resp)=>{
         res.statusCode=200;
         res.setHeader('Content-Type','application/json');

@@ -158,6 +158,7 @@ dishRouter.route('/:dishId/comments/:commentId')
     Dishes.findById(req.params.dishId)
     .populate('comments.author')
     .then((dish) => {
+        
         if (dish != null && dish.comments.id(req.params.commentId) != null) {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -182,10 +183,11 @@ dishRouter.route('/:dishId/comments/:commentId')
         + '/comments/' + req.params.commentId);
 })
 .put(authenticate.verifyUser,(req, res, next) => {
+    console.log(req)// body는 client에서 요청해서 보낸 json 형식 데이터, params는 url에 첨부되어있는 id값
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null && dish.comments.id(req.params.commentId) != null
-        && dish.comments.id(req.params.commentId).author.equals(req.user._id)) {
+        && dish.comments.id(req.params.commentId).author.equals(req.user._id)) {// 해당 아이디로 찾는 것은 id()로 하고 동일한지 비교는 .equals()
             if (req.body.rating) {
                 dish.comments.id(req.params.commentId).rating = req.body.rating;
             }
@@ -219,6 +221,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 .delete(authenticate.verifyUser,(req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
+        
         if (dish != null && dish.comments.id(req.params.commentId) != null && dish.comments.id(req.params.commentId).author.equals(req.user._id)) {
             dish.comments.id(req.params.commentId).remove();
             dish.save()

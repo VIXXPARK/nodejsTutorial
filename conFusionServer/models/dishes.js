@@ -53,7 +53,6 @@ var dishSchema = new Schema({
         type:Boolean,
         default:false
     },
-    comments:[commentSchema]
 }, {
     timestamps: true
 });

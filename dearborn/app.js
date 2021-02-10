@@ -13,7 +13,6 @@ const url = config.mongoUrl;
 const connect = mongoose.connect(url, {useNewUrlParser: true,useUnifiedTopology: true});
 
 var indexRouter = require('./routes/index');
-var PostRouter = require('./routes/postRouter');
 var app = express();
 
 // view engine setup
@@ -30,7 +29,6 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 app.use('/', indexRouter);
-app.use('/post',PostRouter);
 app.use('/api',require('./routes/api'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

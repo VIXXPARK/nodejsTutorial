@@ -19,15 +19,16 @@ exports.list  = (req,res)=>{
 
 exports.assignAdmin = (req,res)=>{
     // refuse if not a admin
-    if(!req.decoded.admin){
-        return res.status(403).json({
-            message: 'you are not an admin'
-        })
-    }
-
+    // if(!req.decoded.admin){
+    //     return res.status(403).json({
+    //         message: 'you are not an admin'
+    //     })
+    // }
+    console.log("req.params.email: ")
+    console.log(req.params.email)
     User.findOneByUsername(req.params.email)
     .then(
-        user=>user.assignAdmin
+        user=>user.assignAdmin()  
     ).then(
         res.json({
             success:true

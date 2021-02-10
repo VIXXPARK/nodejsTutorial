@@ -1,6 +1,6 @@
 const User = require('../../../models/user');
 const jwt = require('jsonwebtoken');
-
+const config = require('../../../config');
 exports.register = (req, res) => {
     const {email,password,nickname,profile} = req.body
     let newUser = null
@@ -53,7 +53,7 @@ exports.register = (req, res) => {
 }
 exports.login = (req, res) => {
     const {email,password} = req.body;
-    const secret = req.app.get('jwt-secret')
+    const secret = config.secretKey
 
     //check the user info & generate the jwt
     

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const crypto = require('crypto')
-
+const config = require('../config');
 var User = new Schema({
     email:{
         type: String,
@@ -36,7 +36,7 @@ var User = new Schema({
 );
 
 User.statics.create= function(email,password,nickname,profile){
-    const encrypted = crypto.createHmac('sha1', config.secret)
+    const encrypted = crypto.createHmac('sha1', config.secretKey)
                       .update(password)
                       .digest('base64')
 
@@ -57,7 +57,7 @@ User.statics.findOneByUsername = function(email){
 }
 
 User.methods.verify = function(password){
-    const encrypted = crypto.createHmac('sha1', config.secret)
+    const encrypted = crypto.createHmac('sha1', config.secretKey)
                       .update(password)
                       .digest('base64')
     return this.password === encrypted

@@ -1,6 +1,15 @@
 var mongoose = require('mongoose');
-const { post } = require('../app');
 var Schema = mongoose.Schema;
+
+var imageSchema = new Schema({
+    image:{
+        type:String,
+        required:true
+    }
+},{
+    timestamps:true
+})
+
 
 var postSchema = new Schema({
     title:{
@@ -28,28 +37,24 @@ var postSchema = new Schema({
         type:Number,
         default:0
     },
-    // user:{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     ref:'User'
-    // },
-    image:{
-        type:String,
-        required: true
-    }
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    },
+    images:[imageSchema]
 },{
     timestamps:true
 });
 
-postSchema.statics.create = function(title,content,thumbnail,image){
+postSchema.statics.create = function(title,content,thumbnail,images,user){
     const post = new this({
         title,
         content,
         thumbnail,
-        image
+        images,
+        user
     })
     return post.save()
 }
-
-
 
 module.exports = mongoose.model('Post',postSchema);

@@ -1,8 +1,8 @@
 const Post = require('../../../models/post');
 const User = require('../../../models/user');
 const Like = require('../../../models/like');
+const disLike = require('../../../models/dislike');
 const jwt_decode = require('jwt-decode');
-const authMiddleware = require('../../../middlewares/auth');
 
 exports.uploadPost = (req,res)=>{
     var decoded=jwt_decode(req.headers['x-access-token']) 
@@ -27,15 +27,41 @@ exports.delete = (req,res)=>{
     })  
 }
 
+
+// exports.getPost = (req,res)=>{
+//     Post.find({})
+//     .then((posts)=>{
+//         const pageCount=Math.ceil(posts.length/10)
+//         let page = parseInt(req.query.p);
+//         if(!page){page=1}
+//         if (page>pageCount){
+//             page=pageCount
+//         }
+//         res.json({
+//             success:true,
+//             "post" : posts.slice(page*10-10,page*10),
+//             "pageCount": pageCount,
+//             "page":page
+//         })
+//     })
+// }
+
 exports.getPost = (req,res)=>{
     Post.find({})
     .then((posts)=>{
+        let limit = parseInt(req.query.limit);
+        let offset = parseInt(req.query.offset);
+        if(limit>posts.length-offset){
+            limit=posts.length-offset
+        }
         res.json({
             success:true,
-            posts
+            "post": posts.slice(offset,offset+limit),
+            "Nextoffset":offset+limit
         })
     })
 }
+
 
 exports.getPostDetail = (req,res)=>{
     Post.findById(req.body.postId)
@@ -115,11 +141,54 @@ exports.likeUp =(req,res,next)=>{
 }
 exports.likeDown =(req,res,next)=>{
     var decoded=jwt_decode(req.headers['x-access-token']) 
-    Like.remove({userId:decoded._id})
+    Like.remove({userId:decoded._id,postId:req.body.postId})
     .then((like)=>{
         res.json({
             success:true,
             like
         })
     })
+}
+
+
+exports.dislikeUp = (req,res,next)=>{
+    var decoded=jwt_decode(req.headers['x-access-token'])
+    var result = new disLike();
+    result.userId=decoded._id;
+    result.postId=req.body.postId;
+    Like.remove({userId:decoded._id,postId:req.body.postId})
+    .then((data)=>{
+        result.save()
+        console.log(data)
+        res.json({
+            success:true,
+            result
+        })
+    })
+}
+
+exports.dislikedown = (req,res,next)=>{
+    var decoded=jwt_decode(req.headers['x-access-token'])
+    disLike.remove({userId:decoded._id,postId:req.body.postId})
+    .then((result)=>{
+        res.json({
+            success:true,
+            result
+        })
+    })
+}
+
+exports.getlikePost = (req,res,next)=>{
+    var decoded=jwt_decode(req.headers['x-access-token'])
+    Like.find({userId:decoded._id})
+    .then((datas)=>{
+        var limit = parseInt(req.query.limit) 
+        var offset = parseInt(req.query.offset)
+        res.json({
+            success:true,
+            "posts":datas.slice(offset,offset+limit)
+        })
+    })
+    
+    
 }

@@ -2,7 +2,7 @@ const Post = require('../../../models/post');
 const User = require('../../../models/user');
 const Like = require('../../../models/like');
 const disLike = require('../../../models/dislike');
-const jwt_decode = require('jwt-decode');
+const Vote = require('../../../models/vote');
 
 exports.uploadPost = (req,res)=>{
     const {title,content,thumbnail,images} = req.body
@@ -27,60 +27,20 @@ exports.delete = (req,res)=>{
 }
 
 
-// exports.getPost = (req,res)=>{
-//     Post.find({})
-//     .then((posts)=>{
-//         const pageCount=Math.ceil(posts.length/10)
-//         let page = parseInt(req.query.p);
-//         if(!page){page=1}
-//         if (page>pageCount){
-//             page=pageCount
-//         }
-//         res.json({
-//             success:true,
-//             "post" : posts.slice(page*10-10,page*10),
-//             "pageCount": pageCount,
-//             "page":page
-//         })
-//     })
-// }
-
 exports.getPost = (req,res)=>{
     Post.find({})
-    .then((posts)=>{
+    .populate("user") //join과 비슷한 역할 
+    .sort({"createdAt":-1})
+    .exec((err,results)=>{
+        if(err) return res.status(400).send(err);
         let limit = parseInt(req.query.limit);
         let offset = parseInt(req.query.offset);
-        if(limit>posts.length-offset){
-            limit=posts.length-offset
-        }
-        let jsonPost= new Array();
-        for(step=offset;step<offset+limit;step++){
-            var postItem= new Object();
-            var nickname='';
-            var profile='';
-            let user_id = posts[step]["user"];
-            postItem.view=posts[step]["view"];
-            postItem.scope=posts[step]["scope"];
-            postItem.category=posts[step]["category"];
-            postItem.score=posts[step]["score"];
-            postItem._id=posts[step]["_id"];
-            postItem.title=posts[step]["title"];
-            postItem.content=posts[step]["content"];
-            postItem.thumbnail=posts[step]["thumbnail"];
-            postItem.images = posts[step]["images"];
-            var info = [];
-            User.findById(user_id).exec(function(err,results){
-                info.push(results);
-                console.log(results.nickname)
-            });
-            console.log(info)
-            // postItem.profile=info.profile;
-            // postItem.nickname=info.nickname;
-            jsonPost.push(postItem);
+        if(limit>results.length-offset){
+            limit=results.length-offset
         }
         res.json({
             success:true,
-            "post": jsonPost,
+            "post": results.slice(offset,offset+limit),
             "Nextoffset":offset+limit
         })
     })
@@ -210,4 +170,16 @@ exports.getlikePost = (req,res,next)=>{
     })
     
     
+}
+
+exports.upView = (req,res,next)=>{
+    Post.findById(req.body.postId)
+    .then((post)=>{
+        post.view+=1;
+        post.save();
+        res.json({
+            success:true,
+            post:post
+        })
+    })
 }

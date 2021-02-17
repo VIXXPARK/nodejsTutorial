@@ -1,9 +1,7 @@
 const router = require('express').Router()
 const controller = require('./controller')
 const Post = require('../../../models/post')
-const jwt_decode = require('jwt-decode');
 const authMiddleware = require('../../../middlewares/auth');
-const paginate = require('express-paginate');
 
 router.post('/uploadPost',authMiddleware,controller.uploadPost)
 router.post('/delete',authMiddleware,controller.delete)
@@ -15,6 +13,7 @@ router.post('/likedown',authMiddleware,controller.likeDown)
 router.post('/dislikeup',authMiddleware,controller.dislikeUp)
 router.post('/dislikedown',authMiddleware,controller.dislikedown)
 router.get('/getLikePost',authMiddleware,controller.getlikePost)
+router.get('/upView',controller.upView)
 
 router.delete('/:postId',authMiddleware,(req,res,next)=>{
     Post.findOne(req.params._id)

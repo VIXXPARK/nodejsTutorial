@@ -1,0 +1,35 @@
+module.exports=(sequelize,DataTypes)=>{
+  return sequelize.define('post',{
+    title:{
+      type:DataTypes.STRING(30),
+      allowNull:false,
+    },
+    content:{
+      type:DataTypes.TEXT,
+      allowNull:true,
+    },
+    thumbnail:{
+      type:DataTypes.STRING,
+      allowNull:false,
+    },
+    view:{
+      type:DataTypes.INTEGER,
+      defaultValue:0,
+    },
+    scope:{
+      type:DataTypes.INTEGER,
+      defaultValue:0,
+    },
+    category:{
+      type:DataTypes.INTEGER,
+      defaultValue:0,
+    },
+    score:{
+      type:DataTypes.INTEGER,
+      defaultValue:0,
+    }
+
+  },{
+    timestamps:true
+  });
+};

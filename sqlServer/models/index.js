@@ -15,6 +15,7 @@ db.User = require('./user')(sequelize, Sequelize);
 db.Post = require('./post')(sequelize,Sequelize);
 db.Image = require('./image')(sequelize,Sequelize);
 db.Like = require('./like')(sequelize,Sequelize);
+db.User.hasMany(db.Post)
 db.Post.belongsTo(db.User)
 db.Post.hasMany(db.Image)
 db.Like.belongsTo(db.Post)

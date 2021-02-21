@@ -7,4 +7,5 @@ router.get('/getPost',controller.getPost)
 router.post('/likeup',authMiddleware,controller.likeup)
 router.get('/getLikePost',authMiddleware,controller.getLikePost)
 router.post('/detailPost',controller.detailPost)
+router.post('/sendmsg',authMiddleware,controller.sendMsg)
 module.exports = router

@@ -1,3 +1,4 @@
+const { sequelize, Sequelize } = require('../../../models');
 const models = require('../../../models');
 const post = require('../../../models/post');
 
@@ -32,7 +33,7 @@ exports.getPost = (req,res,next)=>{
         order:[["createdAt" ,"DESC"]],
         include:[
             {model: models.Image},
-            {model:models.User}
+            {model:models.User,attributes:['nickname','profile','job']},
         ]
     })
     .then((data)=>{
@@ -53,6 +54,7 @@ exports.likeup = (req,res,next)=>{
             res.status(400).send({message:"not allowed!"})
         }
         else{
+            
             models.Like.count({
                 where:{
                     userId:req.decoded.id||req.body.userId,
@@ -61,6 +63,8 @@ exports.likeup = (req,res,next)=>{
             })
             .then((isThere)=>{
                 if(!isThere){
+                    postData.like_count+=1
+                    postData.save();
                     models.Like.create({
                         userId:req.decoded.id||req.body.userId,
                         postId:req.body.postId
@@ -78,12 +82,17 @@ exports.likeup = (req,res,next)=>{
                     })
                 }
                 else{
+                    if(postData.like_count>0){
+                        postData.like_count-=1
+                        postData.save();
+                    }
                     models.Like.destroy({where:{
                             userId:req.decoded.id||req.body.userId,
                             postId:req.body.postId
                         }
                     })
                     .then((data)=>{
+                        
                         res.json({
                             message:"decrease the like",
                             data
@@ -133,6 +142,27 @@ exports.detailPost = (req,res,next)=>{
         res.json({
             success:true,
             detail:data
+        })
+    })
+    .catch(err=>{
+        res.status(400).send({
+            message:err
+        })
+    })
+}
+
+exports.sendMsg = (req,res,next)=>{
+    models.Comment.create({
+        comment_content:req.body.comment_content,
+        userId:req.decoded.id,
+        postId:req.body.postId,
+        createdAt:new Date().getTime(),
+        updatedAt:new Date().getTime()
+    })
+    .then((data)=>{
+        res.json({
+            success:true,
+            comment:data
         })
     })
     .catch(err=>{

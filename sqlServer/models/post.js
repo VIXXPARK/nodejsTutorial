@@ -27,6 +27,10 @@ module.exports=(sequelize,DataTypes)=>{
     score:{
       type:DataTypes.INTEGER,
       defaultValue:0,
+    },
+    like_count:{
+      type:DataTypes.INTEGER,
+      defaultValue:0
     }
 
   },{

@@ -25,5 +25,4 @@ db.Post.hasMany(db.Like)
 db.Like.belongsTo(db.User)
 db.Like.belongsTo(db.Post)
 db.User.hasMany(db.Comment)
-db.Post.hasMany(db.Comment)
 module.exports = db;

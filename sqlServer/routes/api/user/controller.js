@@ -28,8 +28,6 @@ exports.register = (req,res)=>{
 
 exports.login = (req,res,next)=>{
     const {email,password} = req.body;
-    
-
     model.User.findOne({where: {email:email}})
     .then(user=>{
         if(!user){
@@ -67,4 +65,18 @@ exports.login = (req,res,next)=>{
     .catch(err => {
         res.status(500).send({ message: err.message });
       });
+}
+
+exports.assignAdmin = (req,res,next)=>{
+    model.User.findOne({
+        where:{id:req.decoded.id}
+    })
+    .then((data)=>{
+        data.admin=true;
+        data.save()
+        res.json({
+            success:true,
+            info:data
+        })
+    })
 }

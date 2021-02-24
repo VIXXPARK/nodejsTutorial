@@ -3,13 +3,17 @@ const models = require('../../../models');
 const post = require('../../../models/post');
 
 exports.uploadPost = (req,res,next)=>{
-    console.log(Object.values(req.decoded))
+    imagePath=[];
+    for(idx in req.files['images']){
+        var x={image:req.files['images'][idx].path}
+        imagePath.push(x)
+    }
     models.Post.create({
         title:req.body.title,
         content:req.body.content,
-        thumbnail:req.body.thumbnail,
+        thumbnail:req.files['thumbnail'][0].path,
         userId:req.decoded.id,
-        images:Object.values(req.body.images),
+        images:Object.values(imagePath),
         createdAt:new Date().getTime(),
         updatedAt:new Date().getTime()
 
@@ -168,6 +172,37 @@ exports.sendMsg = (req,res,next)=>{
     .catch(err=>{
         res.status(400).send({
             message:err
+        })
+    })
+}
+
+exports.getMsg = (req,res,next)=>{
+    models.Comment.findAll({
+        where:{postId:req.body.postId},
+        order:[["createdAt" ,"DESC"]],
+    })
+    .then((data)=>{
+        res.json({
+            success:true,
+            msg:data
+        })
+    })
+}
+
+exports.updateMsg = (req,res,next)=>{
+    models.Comment.findOne({
+        where:{
+            id:req.body.commentId,
+            userId:req.decoded.id
+        }
+    })
+    .then((data)=>{
+        data.comment_content=req.body.comment_content
+        data.updatedAt=new Date().getTime()
+        data.save()
+        res.status(200).json({
+            success:true,
+            msg:data
         })
     })
 }

@@ -4,7 +4,6 @@ const post = require('../../../models/post');
 
 exports.uploadPost = (req,res,next)=>{
     imagePath=[];
-    // console.log(req.files)
     for(idx in req.files['images']){
         var x={image:req.files['images'][idx].path}
         imagePath.push(x)

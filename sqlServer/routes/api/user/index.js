@@ -5,3 +5,4 @@ router.post('/register',controller.register)
 router.post('/login',controller.login)
 router.get('/assign',authMiddleware,controller.assignAdmin)
 module.exports = router
+

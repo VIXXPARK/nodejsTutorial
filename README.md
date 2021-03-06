@@ -4,7 +4,7 @@ dearborn
 
 [dearbornlink]: https://github.com/VIXXPARK/dearborn
 벨로퍼트의 블로그를 통해 jwt토큰 생성과 로그인을 구현하였다.
-coursera 강의 중 nodejs에 대한 강의를 들었는데 여기에서 전체적인 흐름에 대하여 파악했다.
+coursera 강의 중 nodejs에 대한 강의를 들었는데 여기에서 전체적인 흐름에 대하여 파악했다.\n
 가장 기억 남는 부분
 ```javascript
 exports.getPost = (req,res)=>{
@@ -27,7 +27,7 @@ exports.getPost = (req,res)=>{
 }
 ```
 mongodb의 가장 편한점은 테이블 간의 관계를 깊게 생각하지 않아도 된다는 점이 정말 좋았던 것 같다.
-단순히 .populate(table)
+단순히 .populate(table)을 통해 외래키 관계의 데이터를 손쉽게 가져올 수 있다는 점에서 정말 좋았다.
 
 
 

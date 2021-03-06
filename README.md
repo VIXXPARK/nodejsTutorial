@@ -1,7 +1,7 @@
 dearborn
 ==========
 해당 폴더는 이전에 했던 프로젝트의 백엔드를 장고에서 nodejs와 mongodb를 통해 구현했다.
-Link: [Dearborn][dearbornlink]
+
 [dearbornlink]: https://github.com/VIXXPARK/dearborn
 벨로퍼트의 블로그를 통해 jwt토큰 생성과 로그인을 구현하였다.
 coursera 강의 중 nodejs에 대한 강의를 들었는데 여기에서 전체적인 흐름에 대하여 파악했다.
